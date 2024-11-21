@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
@@ -21,6 +22,7 @@ const classes = [
 
 export default function Classes() {
   const [infoVisible, setInfoVisible] = useState(false);
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -65,7 +67,10 @@ export default function Classes() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.classList}
         renderItem={({ item }) => (
-          <TouchableOpacity style={[styles.classItem, { backgroundColor: item.color }]}>
+          <TouchableOpacity
+            style={[styles.classItem, { backgroundColor: item.color }]}
+            onPress={() => router.push("/students")} // Navigate to Students screen
+          >
             <Text style={styles.classText}>{item.name}</Text>
           </TouchableOpacity>
         )}
@@ -73,17 +78,26 @@ export default function Classes() {
 
       {/* Bottom Menu */}
       <View style={styles.bottomMenu}>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="cog-outline" size={24} color="#6B46C1" />
-          <Text>Settings</Text>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => console.log("Settings pressed")}
+        >
+          <Ionicons name="settings-outline" size={24} color="#6B46C1" />
+          <Text style={styles.menuText}>Settings</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => console.log("Profile pressed")}
+        >
           <Ionicons name="person-outline" size={24} color="#6B46C1" />
-          <Text>Profile</Text>
+          <Text style={styles.menuText}>Profile</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => console.log("Log Out pressed")}
+        >
           <Ionicons name="log-out-outline" size={24} color="#6B46C1" />
-          <Text>Log Out</Text>
+          <Text style={styles.menuText}>Log Out</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -185,5 +199,9 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     alignItems: "center",
+  },
+  menuText: {
+    color: "#6B46C1",
+    fontSize: 14,
   },
 });

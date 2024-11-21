@@ -5,6 +5,8 @@ export default function Layout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="onboarding" />
       <Stack.Screen name="classes" />
+      <Stack.Screen name="students" />
+      <Stack.Screen name="progress" />
     </Stack>
   );
 }
