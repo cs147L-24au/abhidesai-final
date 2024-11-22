@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#6B46C1",
     marginBottom: 20,
-    marginTop: 20, // Add margin for spacing
+    marginTop: 40, // Add margin for spacing
     textAlign: "center",
   },
   list: {
