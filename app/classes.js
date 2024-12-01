@@ -33,7 +33,12 @@ export default function Classes() {
   const renderItem = ({ item, index }) => (
     <TouchableOpacity
       style={[styles.classItem, { backgroundColor: colors[index % colors.length] }]}
-      onPress={() => router.push("/students")} // Navigate to Students screen
+      onPress={() =>
+        router.push({
+          pathname: "/class-details",
+          params: { className: item.name }
+        })
+      }
     >
       <Ionicons name={item.icon} size={28} color="white" style={styles.classIcon} />
       <Text style={styles.classText}>{item.name}</Text>
