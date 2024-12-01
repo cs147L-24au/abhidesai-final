@@ -4,10 +4,10 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 const menuItems = [
-  { id: 'feedback', title: 'Feedback', icon: 'chatbubble-outline' },
-  { id: 'students', title: 'Students', icon: 'people-outline' },
-  { id: 'rubrics', title: 'Rubrics', icon: 'list-outline' },
-  { id: 'diagnostics', title: 'Diagnostics', icon: 'analytics-outline' },
+  { id: "feedback", title: "Feedback", icon: "chatbubble-outline" },
+  { id: "students", title: "Students", icon: "people-outline" },
+  { id: "rubrics", title: "Rubrics", icon: "list-outline" },
+  { id: "diagnostics", title: "Assignments", icon: "analytics-outline" },
 ];
 
 export default function ClassDetails() {
@@ -15,20 +15,20 @@ export default function ClassDetails() {
   const { className } = useLocalSearchParams();
 
   const handleMenuPress = (menuId) => {
-    if (menuId === 'students') {
-      router.push('/students');
-    } else if (menuId === 'rubrics') {
-      router.push('/rubrics');
+    if (menuId === "students") {
+      router.push("/students");
+    } else if (menuId === "rubrics") {
+      router.push("/rubrics");
     } else {
-      // TODO: Implement other menu items
       console.log(`Clicked ${menuId}`);
     }
   };
 
   return (
     <View style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.replace("/")}
         >
@@ -38,6 +38,7 @@ export default function ClassDetails() {
         <Text style={styles.title}>{className || "Class"}</Text>
       </View>
 
+      {/* Menu Grid */}
       <View style={styles.menuGrid}>
         {menuItems.map((item) => (
           <TouchableOpacity
@@ -51,11 +52,12 @@ export default function ClassDetails() {
         ))}
       </View>
 
+      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navButton}>
           <Ionicons name="settings-outline" size={24} color="#6B46C1" />
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.navButton}
           onPress={() => router.replace("/")}
         >
@@ -75,20 +77,18 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
-    marginTop: 60,
-    marginBottom: 40,
+    paddingTop: 60,
+    paddingBottom: 20,
   },
   backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'absolute',
-    left: 20,
+    flexDirection: "row",
+    alignItems: "center",
   },
   backText: {
-    color: '#6B46C1',
+    color: "#6B46C1",
     fontSize: 16,
     marginLeft: 4,
   },
@@ -96,30 +96,30 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     color: "#6B46C1",
-    flex: 1,
     textAlign: "center",
+    flex: 1,
   },
   menuGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-evenly",
     paddingHorizontal: 20,
     marginTop: 20,
   },
   menuItem: {
-    width: '45%',
+    width: "45%",
     aspectRatio: 1,
-    backgroundColor: '#F7FAFC',
+    backgroundColor: "#F7FAFC",
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 20,
   },
   menuText: {
     marginTop: 12,
     fontSize: 16,
-    fontWeight: '600',
-    color: '#4A5568',
+    fontWeight: "600",
+    color: "#4A5568",
   },
   bottomNav: {
     flexDirection: "row",

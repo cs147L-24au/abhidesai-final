@@ -39,6 +39,12 @@ export default function Layout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="rubrics"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

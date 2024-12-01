@@ -22,6 +22,7 @@ export default function Rubrics() {
 
   return (
     <View style={styles.container}>
+      {/* Custom Header */}
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
@@ -33,7 +34,8 @@ export default function Rubrics() {
         <Text style={styles.title}>Rubrics</Text>
       </View>
 
-      <ScrollView style={styles.rubricList}>
+      {/* List of Rubrics */}
+      <ScrollView contentContainerStyle={styles.rubricList}>
         {rubrics.map((rubric, index) => (
           <TouchableOpacity
             key={index}
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginTop: 60,
+    marginTop: 70, // Adjust spacing for better alignment
     marginBottom: 20,
   },
   backButton: {
@@ -81,8 +83,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   rubricList: {
-    flex: 1,
     paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   rubricItem: {
     flexDirection: 'row',
