@@ -19,6 +19,8 @@ export default function ClassDetails() {
       router.push("/students");
     } else if (menuId === "rubrics") {
       router.push("/rubrics");
+    } else if (menuId === "feedback") {
+      router.push("/feedback");
     } else {
       console.log(`Clicked ${menuId}`);
     }
@@ -30,7 +32,7 @@ export default function ClassDetails() {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.replace("/")}
+          onPress={() => router.replace("/classes")}
         >
           <Ionicons name="chevron-back-outline" size={24} color="#6B46C1" />
           <Text style={styles.backText}>Back</Text>
@@ -59,7 +61,7 @@ export default function ClassDetails() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navButton}
-          onPress={() => router.replace("/")}
+          onPress={() => router.replace("/classes")}
         >
           <Ionicons name="home-outline" size={24} color="#6B46C1" />
         </TouchableOpacity>

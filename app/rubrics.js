@@ -26,7 +26,7 @@ export default function Rubrics() {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
-          onPress={() => router.back()}
+          onPress={() => router.replace("/class-details")}
         >
           <Ionicons name="chevron-back-outline" size={24} color="#6B46C1" />
           <Text style={styles.backText}>Back</Text>
@@ -48,6 +48,22 @@ export default function Rubrics() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navButton}>
+          <Ionicons name="settings-outline" size={24} color="#6B46C1" />
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.navButton}
+          onPress={() => router.replace("/classes")}
+        >
+          <Ionicons name="home-outline" size={24} color="#6B46C1" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Ionicons name="person-outline" size={24} color="#6B46C1" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -61,14 +77,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginTop: 70, // Adjust spacing for better alignment
+    marginTop: 70,
     marginBottom: 20,
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    position: 'absolute',
-    left: 20,
   },
   backText: {
     color: '#6B46C1',
@@ -99,5 +113,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
     color: '#2D3748',
+  },
+  bottomNav: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#E2E8F0",
+    backgroundColor: "white",
+  },
+  navButton: {
+    padding: 10,
   },
 });

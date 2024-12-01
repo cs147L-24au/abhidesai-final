@@ -43,7 +43,7 @@ export default function Students() {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
-          onPress={() => router.replace("/")}
+          onPress={() => router.back()}
         >
           <Ionicons name="chevron-back-outline" size={24} color="#6B46C1" />
           <Text style={styles.backText}>Back</Text>
