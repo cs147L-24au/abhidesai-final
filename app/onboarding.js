@@ -51,9 +51,9 @@ const onboardingPages = [
   {
     id: "6",
     icon: "magnify",
-    title: "Diagnostic Hub",
+    title: "Assignment Hub",
     description:
-      "Create targeted diagnostic assessments for your students with full control over amount, type, and subject of the questions.",
+      "Create targeted assessments for your students with full control over amount, type, and subject of the questions.",
   },
 ];
 

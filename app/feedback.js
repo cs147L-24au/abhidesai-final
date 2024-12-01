@@ -5,11 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Platform,
+  Modal,
+  FlatList,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Picker } from "@react-native-picker/picker";
 import * as DocumentPicker from "expo-document-picker";
 
 // Mock data - replace with actual data later
@@ -28,9 +28,11 @@ const students = [
 
 export default function Feedback() {
   const router = useRouter();
-  const [selectedAssignment, setSelectedAssignment] = useState("");
-  const [selectedStudent, setSelectedStudent] = useState("");
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [showAssignmentModal, setShowAssignmentModal] = useState(false);
+  const [showStudentModal, setShowStudentModal] = useState(false);
 
   const handleFilePick = async () => {
     try {
@@ -56,6 +58,64 @@ export default function Feedback() {
     console.log("Generating feedback...");
   };
 
+  const renderModal = (
+    visible,
+    setVisible,
+    data,
+    selectedValue,
+    setSelectedValue,
+    title
+  ) => (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={() => setVisible(false)}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>{title}</Text>
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setVisible(false)}
+            >
+              <Ionicons name="close" size={24} color="#4A5568" />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[
+                  styles.modalItem,
+                  selectedValue?.id === item.id && styles.modalItemSelected,
+                ]}
+                onPress={() => {
+                  setSelectedValue(item);
+                  setVisible(false);
+                }}
+              >
+                <Text
+                  style={[
+                    styles.modalItemText,
+                    selectedValue?.id === item.id && styles.modalItemTextSelected,
+                  ]}
+                >
+                  {item.name}
+                </Text>
+                {selectedValue?.id === item.id && (
+                  <Ionicons name="checkmark" size={24} color="#6B46C1" />
+                )}
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      </View>
+    </Modal>
+  );
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -71,53 +131,45 @@ export default function Feedback() {
       </View>
 
       {/* Main Content */}
-      <ScrollView style={styles.content}>
-        {/* Assignment Dropdown */}
-        <Text style={styles.label}>Select Assignment</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedAssignment}
-            onValueChange={(itemValue) => setSelectedAssignment(itemValue)}
-            style={styles.picker}
+      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+        {/* Assignment Selection */}
+        <View style={styles.section}>
+          <Text style={styles.label}>Assignment</Text>
+          <TouchableOpacity
+            style={styles.selectionButton}
+            onPress={() => setShowAssignmentModal(true)}
           >
-            <Picker.Item label="Choose an assignment..." value="" />
-            {assignments.map((assignment) => (
-              <Picker.Item
-                key={assignment.id}
-                label={assignment.name}
-                value={assignment.id}
-              />
-            ))}
-          </Picker>
+            <Text style={styles.selectionText}>
+              {selectedAssignment ? selectedAssignment.name : "Select Assignment"}
+            </Text>
+            <Ionicons name="chevron-down" size={24} color="#6B46C1" />
+          </TouchableOpacity>
         </View>
 
-        {/* Student Dropdown */}
-        <Text style={styles.label}>Select Student</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedStudent}
-            onValueChange={(itemValue) => setSelectedStudent(itemValue)}
-            style={styles.picker}
+        {/* Student Selection */}
+        <View style={styles.section}>
+          <Text style={styles.label}>Student</Text>
+          <TouchableOpacity
+            style={styles.selectionButton}
+            onPress={() => setShowStudentModal(true)}
           >
-            <Picker.Item label="Choose a student..." value="" />
-            {students.map((student) => (
-              <Picker.Item
-                key={student.id}
-                label={student.name}
-                value={student.id}
-              />
-            ))}
-          </Picker>
+            <Text style={styles.selectionText}>
+              {selectedStudent ? selectedStudent.name : "Select Student"}
+            </Text>
+            <Ionicons name="chevron-down" size={24} color="#6B46C1" />
+          </TouchableOpacity>
         </View>
 
         {/* File Upload */}
-        <Text style={styles.label}>Upload Student Work</Text>
-        <TouchableOpacity style={styles.uploadButton} onPress={handleFilePick}>
-          <Ionicons name="cloud-upload-outline" size={24} color="#6B46C1" />
-          <Text style={styles.uploadText}>
-            {selectedFile ? selectedFile.name : "Select File"}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.section}>
+          <Text style={styles.label}>Student Work</Text>
+          <TouchableOpacity style={styles.uploadButton} onPress={handleFilePick}>
+            <Ionicons name="cloud-upload-outline" size={24} color="#6B46C1" />
+            <Text style={styles.uploadText}>
+              {selectedFile ? selectedFile.name : "Upload File"}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Generate Button */}
         <TouchableOpacity
@@ -132,6 +184,24 @@ export default function Feedback() {
           <Text style={styles.generateButtonText}>Generate Feedback</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* Modals */}
+      {renderModal(
+        showAssignmentModal,
+        setShowAssignmentModal,
+        assignments,
+        selectedAssignment,
+        setSelectedAssignment,
+        "Select Assignment"
+      )}
+      {renderModal(
+        showStudentModal,
+        setShowStudentModal,
+        students,
+        selectedStudent,
+        setSelectedStudent,
+        "Select Student"
+      )}
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
@@ -182,49 +252,106 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
+  },
+  contentContainer: {
+    padding: 20,
+  },
+  section: {
+    marginBottom: 30,
   },
   label: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
-    color: "#4A5568",
-    marginTop: 20,
-    marginBottom: 8,
+    color: "#2D3748",
+    marginBottom: 12,
   },
-  pickerContainer: {
+  selectionButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: "#F7FAFC",
-    borderRadius: 10,
-    marginBottom: 16,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
   },
-  picker: {
-    height: 50,
+  selectionText: {
+    fontSize: 16,
+    color: "#4A5568",
   },
   uploadButton: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#F7FAFC",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 30,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
   },
   uploadText: {
-    marginLeft: 10,
-    color: "#4A5568",
+    marginLeft: 12,
     fontSize: 16,
+    color: "#4A5568",
   },
   generateButton: {
     backgroundColor: "#6B46C1",
     padding: 16,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: "center",
-    marginBottom: 30,
+    marginTop: 20,
   },
   generateButtonDisabled: {
     backgroundColor: "#A0AEC0",
   },
   generateButtonText: {
     color: "white",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: "70%",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E2E8F0",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#2D3748",
+  },
+  modalCloseButton: {
+    padding: 4,
+  },
+  modalItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E2E8F0",
+  },
+  modalItemSelected: {
+    backgroundColor: "#F7FAFC",
+  },
+  modalItemText: {
     fontSize: 16,
+    color: "#4A5568",
+  },
+  modalItemTextSelected: {
+    color: "#6B46C1",
     fontWeight: "600",
   },
   bottomNav: {
