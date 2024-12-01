@@ -33,6 +33,7 @@ export default function Feedback() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
   const [showStudentModal, setShowStudentModal] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(false);
 
   const handleFilePick = async () => {
     try {
@@ -128,7 +129,29 @@ export default function Feedback() {
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.title}>Feedback</Text>
+        <TouchableOpacity onPress={() => setInfoVisible(true)}>
+          <Ionicons name="information-circle-outline" size={28} color="#6B46C1" />
+        </TouchableOpacity>
       </View>
+
+      {/* Info Modal */}
+      <Modal visible={infoVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.infoModalContent}>
+            <Text style={styles.infoModalTitle}>How to Use Feedback</Text>
+            <Text style={styles.infoModalText}>
+              Select an assignment and a student to provide feedback.
+              You can also upload documents for review.
+            </Text>
+            <TouchableOpacity
+              style={styles.infoCloseButton}
+              onPress={() => setInfoVisible(false)}
+            >
+              <Text style={styles.infoCloseButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Main Content */}
       <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
@@ -233,6 +256,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginTop: 60,
     marginBottom: 20,
+    justifyContent: "space-between",
   },
   backButton: {
     flexDirection: "row",
@@ -352,6 +376,42 @@ const styles = StyleSheet.create({
   },
   modalItemTextSelected: {
     color: "#6B46C1",
+    fontWeight: "600",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  infoModalContent: {
+    width: "80%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  infoModalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#2D3748",
+  },
+  infoModalText: {
+    fontSize: 16,
+    textAlign: "center",
+    color: "#4A5568",
+    marginBottom: 20,
+  },
+  infoCloseButton: {
+    backgroundColor: "#6B46C1",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  infoCloseButtonText: {
+    color: "white",
+    fontSize: 16,
     fontWeight: "600",
   },
   bottomNav: {
