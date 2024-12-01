@@ -84,7 +84,7 @@ export default function Feedback() {
           type: 'image/jpeg',
           size: photo.fileSize || 0
         };
-        setSelectedFile(fileData);//testcomment
+        setSelectedFile(fileData);
       }
     } catch (err) {
       console.error("Error taking picture:", err);

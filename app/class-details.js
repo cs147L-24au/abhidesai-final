@@ -21,6 +21,8 @@ export default function ClassDetails() {
       router.push("/rubrics");
     } else if (menuId === "feedback") {
       router.push("/feedback");
+    } else if (menuId === "diagnostics") {
+      router.push("/assignments-page");
     } else {
       console.log(`Clicked ${menuId}`);
     }
