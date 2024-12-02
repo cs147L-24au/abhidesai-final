@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import BottomMenu from './BottomMenu';
 
 const menuItems = [
   { id: "feedback", title: "Feedback", icon: "chatbubble-outline" },
@@ -57,20 +58,7 @@ export default function ClassDetails() {
       </View>
 
       {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="settings-outline" size={24} color="#6B46C1" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => router.replace("/classes")}
-        >
-          <Ionicons name="home-outline" size={24} color="#6B46C1" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="person-outline" size={24} color="#6B46C1" />
-        </TouchableOpacity>
-      </View>
+      <BottomMenu router={router} />
     </View>
   );
 }
@@ -124,22 +112,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#4A5568",
-  },
-  bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 80,
-    backgroundColor: "white",
-    borderTopWidth: 1,
-    borderTopColor: "#E2E8F0",
-    paddingBottom: 20,
-  },
-  navButton: {
-    padding: 10,
   },
 });

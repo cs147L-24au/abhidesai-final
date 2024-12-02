@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Dimensions }
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import BottomMenu from './BottomMenu';
 
 const students = [
   { id: "1", name: "James L." },
@@ -59,32 +60,9 @@ export default function Students() {
         columnWrapperStyle={styles.columnWrapper}
       />
 
-      {/* Bottom Menu */}
-      <View style={styles.bottomMenu}>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => console.log("Settings pressed")}
-        >
-          <Ionicons name="settings-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Settings</Text>
-        </TouchableOpacity>
+      {/* Bottom Navigation */}
+      <BottomMenu router={router} />
 
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => router.push("/classes")}
-        >
-          <Ionicons name="home-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => console.log("Profile pressed")}
-        >
-          <Ionicons name="person-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -150,24 +128,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#4A5568",
     marginTop: 4,
-  },
-  bottomMenu: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingBottom: 30,
-    paddingTop: 10,
-    backgroundColor: "#F7FAFC",
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    borderTopWidth: 1,
-    borderColor: "#E2E8F0",
-  },
-  menuItem: {
-    alignItems: "center",
-  },
-  menuText: {
-    color: "#6B46C1",
-    fontSize: 14,
   },
 });

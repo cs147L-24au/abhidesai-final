@@ -8,10 +8,12 @@ import {
   TextInput,
   Modal,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { BarChart } from "react-native-chart-kit";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import BottomMenu from './BottomMenu';
 
 const { width } = Dimensions.get("window");
 
@@ -22,6 +24,8 @@ export default function AssignmentsPage() {
     { id: 3, title: "Assignment 3", score: 78 },
   ]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [newAssignmentTitle, setNewAssignmentTitle] = useState('');
+  const [newAssignmentDescription, setNewAssignmentDescription] = useState('');
 
   const averageScore =
     assignments.reduce((acc, assignment) => acc + assignment.score, 0) /
@@ -31,6 +35,11 @@ export default function AssignmentsPage() {
 
   const handleNewAssignment = () => {
     setModalVisible(true);
+  };
+
+  const handleSaveAssignment = () => {
+    // Add new assignment logic here
+    setModalVisible(false);
   };
 
   return (
@@ -43,11 +52,6 @@ export default function AssignmentsPage() {
         </Pressable>
         <Text style={styles.title}>Assignments</Text>
       </View>
-
-      {/* Average Score */}
-      <Text style={styles.sectionTitle}>
-        Average Score: <Text style={styles.boldText}>{averageScore.toFixed(2)}%</Text>
-      </Text>
 
       {/* Progress Chart */}
       <BarChart
@@ -79,59 +83,78 @@ export default function AssignmentsPage() {
         fromZero
       />
 
-      {/* Assignments List */}
+      {/* Average Score */}
+      <Text style={styles.sectionTitle}>
+        Average Score: <Text style={styles.boldText}>{averageScore.toFixed(2)}%</Text>
+      </Text>
+
       <FlatList
         data={assignments}
-        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Text style={styles.assignmentItem}>
-            {item.title}: {item.score}%
-          </Text>
+          <View style={styles.assignmentItem}>
+            <Text style={styles.assignmentTitle}>{item.title}</Text>
+            <Text style={styles.assignmentScore}>{item.score}%</Text>
+          </View>
+        )}
+        keyExtractor={(item) => item.id.toString()}
+        ListEmptyComponent={() => (
+          <Text style={styles.emptyListText}>No assignments available.</Text>
         )}
         contentContainerStyle={styles.assignmentsList}
       />
 
-      {/* New Assignment Button */}
+      {/* New Assignment Button at the Bottom */}
       <Pressable style={styles.newAssignmentButton} onPress={handleNewAssignment}>
         <Ionicons name="add-circle-outline" size={20} color="white" />
         <Text style={styles.newAssignmentButtonText}>New Assignment</Text>
       </Pressable>
 
-      {/* Modal for New Assignment */}
-      <Modal
-        visible={modalVisible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
+      {/* New Assignment Modal */}
+      <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>New Assignment Coming Soon!</Text>
-            <Pressable
-              style={styles.modalCloseButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.modalCloseButtonText}>Close</Text>
-            </Pressable>
+            <Text style={styles.modalTitle}>New Assignment</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Assignment Title</Text>
+              <TextInput
+                style={styles.input}
+                value={newAssignmentTitle}
+                onChangeText={setNewAssignmentTitle}
+                placeholder="Enter assignment title"
+                placeholderTextColor="#A0AEC0"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Describe Assignment</Text>
+              <TextInput
+                style={[styles.input, { height: 100 }]}  // Adjusted for multiline
+                value={newAssignmentDescription}
+                onChangeText={setNewAssignmentDescription}
+                placeholder="Enter description"
+                placeholderTextColor="#A0AEC0"
+                multiline
+              />
+            </View>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.saveButton]}
+                onPress={handleSaveAssignment}
+              >
+                <Text style={styles.saveButtonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
 
       {/* Bottom Navigation */}
-      <View style={styles.bottomMenu}>
-        <Pressable style={styles.menuItem} onPress={() => router.push("/classes")}>
-          <Ionicons name="home-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Home</Text>
-        </Pressable>
-        <View style={styles.menuItem}>
-          <Ionicons name="person-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Profile</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <Ionicons name="settings-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Settings</Text>
-        </View>
-      </View>
+      <BottomMenu router={router} />
     </View>
   );
 }
@@ -140,6 +163,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    width: "100%",
     paddingHorizontal: 20,
   },
   header: {
@@ -173,18 +197,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   assignmentItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  assignmentTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#4A5568",
+  },
+  assignmentScore: {
     fontSize: 16,
     color: "#4A5568",
-    marginVertical: 8,
+  },
+  emptyListText: {
+    fontSize: 16,
+    color: "#4A5568",
+    textAlign: "center",
+    padding: 20,
   },
   newAssignmentButton: {
     backgroundColor: "#6B46C1",
     padding: 15,
     borderRadius: 10,
-    alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 30,
+    marginBottom: 100, // Adjusted to be slightly higher above the bottom menu
   },
   newAssignmentButtonText: {
     color: "white",
@@ -200,27 +238,38 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "80%",
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 20,
-    alignItems: "center",
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
+  inputContainer: {
+    marginBottom: 10,
+  },
+  inputLabel: {
+    fontSize: 16,
     color: "#4A5568",
-    marginBottom: 20,
+    marginBottom: 5,
   },
-  modalCloseButton: {
-    backgroundColor: "#6B46C1",
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  modalButton: {
     padding: 10,
-    borderRadius: 8,
-    width: "100%",
-    alignItems: "center",
+    borderRadius: 5,
   },
-  modalCloseButtonText: {
+  cancelButton: {
+    backgroundColor: "#ccc",
+  },
+  cancelButtonText: {
+    color: "#666",
+  },
+  saveButton: {
+    backgroundColor: "#6B46C1",
+  },
+  saveButtonText: {
     color: "#fff",
-    fontWeight: "bold",
   },
   backButton: {
     marginRight: 8,
@@ -233,23 +282,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#6B46C1",
   },
-  bottomMenu: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingBottom: 30,
-    paddingTop: 10,
-    backgroundColor: "#F7FAFC",
-    position: "absolute",
-    bottom: 0,
-    width: width,
-    borderTopWidth: 1,
-    borderColor: "#E2E8F0",
-  },
-  menuItem: {
-    alignItems: "center",
-  },
-  menuText: {
-    color: "#6B46C1",
-    fontSize: 14,
+  input: {
+    width: "100%",
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    padding: 10,
+    marginBottom: 20,
   },
 });
