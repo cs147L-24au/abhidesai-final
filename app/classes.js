@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import BottomMenu from './BottomMenu';
 
 const { width } = Dimensions.get("window");
 
@@ -163,31 +164,7 @@ export default function Classes() {
       </Modal>
 
       {/* Bottom Menu */}
-      <View style={styles.bottomMenu}>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => console.log("Settings pressed")}
-        >
-          <Ionicons name="settings-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Settings</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => router.push("/classes")}
-        >
-          <Ionicons name="home-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => console.log("Profile pressed")}
-        >
-          <Ionicons name="person-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomMenu router={router} />
     </View>
   );
 }
@@ -350,26 +327,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
-  },
-
-  // Bottom menu styling
-  bottomMenu: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingBottom: 30,
-    paddingTop: 10,
-    backgroundColor: "#F7FAFC",
-    position: "absolute",
-    bottom: 0,
-    width: width,
-    borderTopWidth: 1,
-    borderColor: "#E2E8F0",
-  },
-  menuItem: {
-    alignItems: "center",
-  },
-  menuText: {
-    color: "#6B46C1",
-    fontSize: 14,
   },
 });

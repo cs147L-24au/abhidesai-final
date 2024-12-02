@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import BottomMenu from './BottomMenu';
 
 // Mock data for rubrics - replace with actual data source later
 const rubrics = [
@@ -50,20 +51,8 @@ export default function Rubrics() {
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="settings-outline" size={24} color="#6B46C1" />
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.navButton}
-          onPress={() => router.replace("/classes")}
-        >
-          <Ionicons name="home-outline" size={24} color="#6B46C1" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="person-outline" size={24} color="#6B46C1" />
-        </TouchableOpacity>
-      </View>
+      <BottomMenu router={router} />
+
     </View>
   );
 }
@@ -113,17 +102,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
     color: '#2D3748',
-  },
-  bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    paddingVertical: 20,
-    borderTopWidth: 1,
-    borderTopColor: "#E2E8F0",
-    backgroundColor: "white",
-  },
-  navButton: {
-    padding: 10,
   },
 });

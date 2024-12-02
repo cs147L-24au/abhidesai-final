@@ -13,6 +13,7 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { BarChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import BottomMenu from './BottomMenu';
 
 const { width } = Dimensions.get("window");
 
@@ -169,32 +170,8 @@ export default function Progress() {
         </View>
       </Modal>
 
-      {/* Bottom Menu */}
-      <View style={styles.bottomMenu}>
-        <Pressable
-          style={styles.menuItem}
-          onPress={() => console.log("Settings pressed")}
-        >
-          <Ionicons name="settings-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Settings</Text>
-        </Pressable>
-
-        <Pressable
-          style={styles.menuItem}
-          onPress={() => router.push("/classes")}
-        >
-          <Ionicons name="home-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Home</Text>
-        </Pressable>
-
-        <Pressable
-          style={styles.menuItem}
-          onPress={() => console.log("Profile pressed")}
-        >
-          <Ionicons name="person-outline" size={24} color="#6B46C1" />
-          <Text style={styles.menuText}>Profile</Text>
-        </Pressable>
-      </View>
+      {/* Bottom Navigation */}
+      <BottomMenu router={router} />
     </View>
   );
 }
@@ -315,24 +292,5 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: "#fff",
     fontWeight: "bold",
-  },
-  bottomMenu: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingBottom: 30,
-    paddingTop: 10,
-    backgroundColor: "#F7FAFC",
-    position: "absolute",
-    bottom: 0,
-    width: width,
-    borderTopWidth: 1,
-    borderColor: "#E2E8F0",
-  },
-  menuItem: {
-    alignItems: "center",
-  },
-  menuText: {
-    color: "#6B46C1",
-    fontSize: 14,
   },
 });

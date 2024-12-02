@@ -51,6 +51,24 @@ export default function Layout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="assignments-page"
+        options={{
+          headerShown: false, // Add this line to hide the header for "assignments"
+        }}
+      />
+      <Stack.Screen
+        name="profile"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="settings"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
