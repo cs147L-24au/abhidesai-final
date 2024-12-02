@@ -18,7 +18,7 @@ const Profile = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>User Information</Text>
         <Text style={styles.sectionItem}>Name: John Doe</Text>
-        <Text style={styles.sectionItem}>Email: john.doe@example.com</Text>
+        <Text style={styles.sectionItem}>Email: john.doe@example.com</Text>//test
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Preferences</Text>
