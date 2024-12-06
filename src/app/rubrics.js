@@ -6,11 +6,9 @@ import BottomMenu from './BottomMenu';
 
 // Mock data for rubrics - replace with actual data source later
 const rubrics = [
-  "SAT-Practice-Test-1-Rubric.pdf",
-  "midterm-rubric.pdf",
-  "final-project-rubric.pdf",
-  "presentation-rubric.pdf",
-  "essay-rubric.pdf"
+  "Sat-Practice-Test.pdf",
+  "Handwritten-Essay.pdf",
+  "Typed-Essay.pdf"
 ];
 
 export default function Rubrics() {
@@ -34,6 +32,11 @@ export default function Rubrics() {
         </TouchableOpacity>
         <Text style={styles.title}>Rubrics</Text>
       </View>
+
+      {/* Add Rubric Button */}
+      <TouchableOpacity style={styles.addButton} onPress={() => {}}>
+        <Text style={styles.addButtonText}>Add Rubric</Text>
+      </TouchableOpacity>
 
       {/* List of Rubrics */}
       <ScrollView contentContainerStyle={styles.rubricList}>
@@ -84,6 +87,19 @@ const styles = StyleSheet.create({
     color: "#6B46C1",
     flex: 1,
     textAlign: "center",
+  },
+  addButton: {
+    backgroundColor: '#6B46C1', 
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  addButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   rubricList: {
     paddingHorizontal: 20,
