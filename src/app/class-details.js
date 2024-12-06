@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import BottomMenu from './BottomMenu';
+import Header from './components/Header';
 
 const menuItems = [
   { id: "feedback", title: "Feedback", icon: "chatbubble-outline" },
@@ -32,17 +33,7 @@ export default function ClassDetails() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.replace("/classes")}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="#6B46C1" />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>{className || "Class"}</Text>
-      </View>
-
+      <Header title="Class Details" />
       {/* Menu Grid */}
       <View style={styles.menuGrid}>
         {menuItems.map((item) => (
@@ -67,29 +58,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
-  },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  backText: {
-    color: "#6B46C1",
-    fontSize: 16,
-    marginLeft: 4,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#6B46C1",
-    textAlign: "center",
-    flex: 1,
   },
   menuGrid: {
     flexDirection: "row",

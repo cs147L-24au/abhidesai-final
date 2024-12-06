@@ -16,6 +16,7 @@ import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { generateFeedback } from './utils/gptApi';
 import BottomMenu from './BottomMenu';
+import Header from './components/Header';
 
 // Mock data - replace with actual data later
 const assignments = [
@@ -188,18 +189,7 @@ export default function Feedback() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="#6B46C1" />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Feedback</Text>
-      </View>
-
+      <Header title="Feedback" />
       {/* Main Content */}
       <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
         {/* Assignment Selection */}
@@ -298,29 +288,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    marginTop: 60,
-    marginBottom: 20,
-  },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  backText: {
-    color: "#6B46C1",
-    fontSize: 16,
-    marginLeft: 4,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#6B46C1",
-    flex: 1,
-    textAlign: "center",
   },
   content: {
     flex: 1,

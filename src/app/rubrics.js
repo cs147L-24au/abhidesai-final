@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-nati
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import BottomMenu from './BottomMenu';
+import Header from './components/Header';
 
 // Mock data for rubrics - replace with actual data source later
 const rubrics = [
@@ -22,16 +23,7 @@ export default function Rubrics() {
   return (
     <View style={styles.container}>
       {/* Custom Header */}
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.replace("/class-details")}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="#6B46C1" />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Rubrics</Text>
-      </View>
+      <Header title="Rubrics" />
 
       {/* Add Rubric Button */}
       <TouchableOpacity style={styles.addButton} onPress={() => {}}>
@@ -64,29 +56,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginTop: 70,
-    marginBottom: 20,
-  },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backText: {
-    color: '#6B46C1',
-    fontSize: 16,
-    marginLeft: 4,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#6B46C1",
-    flex: 1,
-    textAlign: "center",
   },
   addButton: {
     backgroundColor: '#6B46C1', 

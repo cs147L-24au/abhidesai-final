@@ -14,6 +14,7 @@ import { BarChart } from "react-native-chart-kit";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import BottomMenu from './BottomMenu';
+import Header from './components/Header';
 
 const { width } = Dimensions.get("window");
 
@@ -44,15 +45,7 @@ export default function AssignmentsPage() {
 
   return (
     <View style={styles.container}>
-      {/* Header with Back Button */}
-      <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={() => router.push("/class-details")}>
-          <Ionicons name="arrow-back" size={20} color="#6B46C1" />
-          <Text style={styles.backButtonText}>Back</Text>
-        </Pressable>
-        <Text style={styles.title}>Assignments</Text>
-      </View>
-
+      <Header title="Assignments" />
       {/* Progress Chart */}
       <BarChart
         data={{
@@ -166,18 +159,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
   },
-  header: {
-    marginTop: 60,
-    marginBottom: 20,
-    color: "#6B46C1",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#4A5568",
-  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "600",
@@ -271,16 +252,11 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: "#fff",
   },
-  backButton: {
-    marginRight: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-  },
-  backButtonText: {
-    marginLeft: 4,
-    fontSize: 14,
-    color: "#6B46C1",
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#4A5568",
+    marginBottom: 10,
   },
   input: {
     width: "100%",

@@ -14,6 +14,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { BarChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import BottomMenu from './BottomMenu';
+import Header from './components/Header';
 
 const { width } = Dimensions.get("window");
 
@@ -89,18 +90,7 @@ export default function Progress() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="#6B46C1" />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>{studentName || "Unknown Student"}</Text>
-      </View>
-
+      <Header title={studentName || "Unknown Student"} />
       {/* Progress Chart */}
       <Text style={styles.sectionTitle}>Overall Progress</Text>
       <BarChart
@@ -181,29 +171,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     paddingHorizontal: 20,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    marginTop: 60,
-    marginBottom: 20,
-  },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    position: "absolute",
-    left: 0,
-  },
-  backText: {
-    color: "#6B46C1",
-    fontSize: 16,
-    marginLeft: 4,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#4A5568",
   },
   sectionTitle: {
     fontSize: 20,

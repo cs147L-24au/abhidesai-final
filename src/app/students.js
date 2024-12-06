@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BottomMenu from './BottomMenu';
+import Header from './components/Header';
 
 const students = [
   { id: "1", name: "James L." },
@@ -41,16 +42,7 @@ export default function Students() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Ionicons name="chevron-back-outline" size={24} color="#6B46C1" />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Students</Text>
-      </View>
+      <Header title="Students" />
       <FlatList
         data={students}
         renderItem={renderItem}
@@ -71,31 +63,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginTop: 60,
-    marginBottom: 20,
-  },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'absolute',
-    left: 20,
-  },
-  backText: {
-    color: '#6B46C1',
-    fontSize: 16,
-    marginLeft: 4,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#6B46C1",
-    flex: 1,
-    textAlign: "center",
   },
   listContainer: {
     paddingBottom: 100,
