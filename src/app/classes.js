@@ -184,12 +184,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    marginTop: 40,
+    marginTop:60,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#2D3748",
+    color: "#6B46C1",
   },
   iconRow: {
     flexDirection: "row",
