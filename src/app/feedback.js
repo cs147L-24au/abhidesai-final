@@ -14,7 +14,8 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
-import { generateFeedback } from './utils/gptApi';
+// import { generateFeedback } from './utils/gptApi';
+import { generateFeedback } from './gptApi';
 
 // Mock data - replace with actual data later
 const assignments = [
