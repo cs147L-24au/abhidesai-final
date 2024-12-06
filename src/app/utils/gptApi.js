@@ -109,6 +109,11 @@ const compressImage = async (uri, onProgress) => {
 };
 
 export const generateFeedback = async (file, student, assignment, onProgress) => {
+  let content = "hello";
+  if (assignment.name === "SAT Practice Test") {
+    content = "According to botanists, a viburnum plant experiencing insect damage may develop erineum—adiscolored, felty growth—on its leaf blades. A ______viburnum plant, on the other hand, will have leaveswith smooth surfaces and uniformly greencoloration.Which choice completes the text with the mostlogical and precise word or phrase?A) strugglingB) beneficialC) simpleD) healthy2Nigerian American author Teju Cole’s ______ hitwo passions—photography and the writtenword—culminates in his 2017 book, Blind Spot,which evocatively combines his original photographsfrom his travels with his poetic prose.Which choice completes the text with the mostlogical and precise word or phrase?A) indifference toB) enthusiasm forC) concern aboutD) surprise at Novelist N. K. Jemisin declines to ______ the conventions of the science fiction genre in which she writes, and she has suggested that her readers appreciate her work precisely because of this willingness to thwart expectations and avoid formulaic plots and themes. Which choice completes the text with the most logical and precise word or phrase? A) question B) react to C) perceive D) conform to In Nature Poem (2017), Kumeyaay poet Tommy Pico portrays his ______ the natural world by honoring the centrality of nature within his tribe’s traditional beliefs while simultaneously expressing his distaste for being in wilderness settings himself. Which choice completes the text with the most logical and precise word or phrase? A) responsiveness to B) ambivalence toward C) renunciation of D) mastery over. Assume the student answered A to all questions the correct answers are D, B, D, A. Give a breakdown of wrong and right answers and feedback for each.";
+  }
+  console.log("assignment",assignment);
   try {
     // Check if API key is present
     console.log(process.env.OPENAI_API_KEY);
@@ -116,21 +121,22 @@ export const generateFeedback = async (file, student, assignment, onProgress) =>
       throw new Error('OpenAI API key is not configured');
     }
 
-    const payload = {
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: "You are an expert SAT paper grader providing feedback on student answers."
-        },
-        {
-          role: "user",
-          content: "According to botanists, a viburnum plant experiencing insect damage may develop erineum—adiscolored, felty growth—on its leaf blades. A ______viburnum plant, on the other hand, will have leaveswith smooth surfaces and uniformly greencoloration.Which choice completes the text with the mostlogical and precise word or phrase?A) strugglingB) beneficialC) simpleD) healthy2Nigerian American author Teju Cole’s ______ hitwo passions—photography and the writtenword—culminates in his 2017 book, Blind Spot,which evocatively combines his original photographsfrom his travels with his poetic prose.Which choice completes the text with the mostlogical and precise word or phrase?A) indifference toB) enthusiasm forC) concern aboutD) surprise at Novelist N. K. Jemisin declines to ______ the conventions of the science fiction genre in which she writes, and she has suggested that her readers appreciate her work precisely because of this willingness to thwart expectations and avoid formulaic plots and themes. Which choice completes the text with the most logical and precise word or phrase? A) question B) react to C) perceive D) conform to In Nature Poem (2017), Kumeyaay poet Tommy Pico portrays his ______ the natural world by honoring the centrality of nature within his tribe’s traditional beliefs while simultaneously expressing his distaste for being in wilderness settings himself. Which choice completes the text with the most logical and precise word or phrase? A) responsiveness to B) ambivalence toward C) renunciation of D) mastery over. Assume the student answered A to all questions the correct answers are D, B, D, A. Give a breakdown of wrong and right answers and feedback for each."
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 500
-    };
+      const payload = {
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "You are an expert SAT paper grader providing feedback on student answers."
+          },
+          {
+            role: "user",
+            content: content
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 500
+      };
+    
 
     onProgress?.('Sending request to Chat API...');
     console.log('Making Chat API request with payload:', {

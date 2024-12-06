@@ -6,7 +6,7 @@ import BottomMenu from './BottomMenu';
 
 // Mock data for rubrics - replace with actual data source later
 const rubrics = [
-  "test1-rubric.pdf",
+  "SAT-Practice-Test-1-Rubric.pdf",
   "midterm-rubric.pdf",
   "final-project-rubric.pdf",
   "presentation-rubric.pdf",

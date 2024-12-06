@@ -19,7 +19,7 @@ import BottomMenu from './BottomMenu';
 
 // Mock data - replace with actual data later
 const assignments = [
-  { id: "1", name: "Assignment 1" },
+  { id: "1", name: "SAT Practice Test" },
   { id: "2", name: "Midterm Essay" },
   { id: "3", name: "Final Project" },
 ];
