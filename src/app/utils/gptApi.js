@@ -112,7 +112,7 @@ export const generateFeedback = async (file, student, assignment, onProgress) =>
   // Custom prompts for each assignment
   switch (assignment.name) {
     case "SAT Practice Test":
-      systemPrompt = "You are an expert SAT paper grader providing feedback on student answers.";
+      systemPrompt = "You are an expert SAT paper grader providing feedback on student answers. DO NOT USE MARKDOWN IN YOUR ANSWER UNDER ANY CIRCUMSTANCE";
       userPrompt = `
         The student answered the following SAT questions. Here are their answers:
         1. Answer: A
@@ -131,7 +131,7 @@ export const generateFeedback = async (file, student, assignment, onProgress) =>
       break;
 
     case "Handwritten Essay":
-      systemPrompt = "You are an experienced teacher grading handwritten essays.";
+      systemPrompt = "You are an experienced teacher grading handwritten essays. DO NOT USE MARKDOWN IN YOUR ANSWER UNDER ANY CIRCUMSTANCE";
       userPrompt = `
         Here is a transcription of the student's handwritten essay:
         Essay is an essay on the benefits and drawbacks of cursive handwriting. 
@@ -141,7 +141,7 @@ export const generateFeedback = async (file, student, assignment, onProgress) =>
       break;
 
     case "Typed Essay":
-      systemPrompt = "You are an experienced teacher grading typed essays.";
+      systemPrompt = "You are an experienced teacher grading typed essays. DO NOT USE MARKDOWN IN YOUR ANSWER UNDER ANY CIRCUMSTANCE";
       userPrompt = `
         Here is the student's typed essay:
         ctive Essay:

@@ -58,6 +58,12 @@ export default function Layout() {
         }}
       />
       <Stack.Screen
+        name="gptResponse"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="profile"
         options={{
           headerShown: false,
