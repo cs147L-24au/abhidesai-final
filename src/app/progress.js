@@ -46,7 +46,12 @@ const studentData = {
 export default function Progress() {
   const router = useRouter();
   const { studentId, studentName } = useLocalSearchParams();
+  const generateRandomProgress = () => {
+    return Array.from({ length: 8 }, () => Math.floor(Math.random() * 101));
+  };
+
   const student = studentData[studentId] || studentData["1"];
+  const progressData = student.progress && student.progress.length === 8 ? student.progress : generateRandomProgress();
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -111,9 +116,9 @@ export default function Progress() {
       <Animated.View style={animatedStyle}>
         <BarChart
           data={{
-            labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
             datasets: [{ 
-              data: student.progress || [0, 0, 0, 0, 0],
+              data: progressData,
               color: (opacity = 1) => `#6B46C1`
             }],
           }}
@@ -126,7 +131,7 @@ export default function Progress() {
             decimalPlaces: 0,
             color: (opacity = 1) => `#6B46C1`,
             labelColor: () => "#4A5568",
-            barPercentage: 0.8,
+            barPercentage: 0.7,
             barRadius: 6,
             propsForBackgroundLines: {
               strokeWidth: 0
@@ -137,6 +142,7 @@ export default function Progress() {
             paddingVertical: 8,
             marginBottom: 20,
             backgroundColor: "#FFFFFF",
+            marginLeft: -40,
           }}
           withHorizontalLabels={false}
           fromZero={true}

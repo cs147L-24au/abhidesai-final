@@ -25,11 +25,6 @@ export default function Rubrics() {
       {/* Custom Header */}
       <Header title="Rubrics" />
 
-      {/* Add Rubric Button */}
-      <TouchableOpacity style={styles.addButton} onPress={() => {}}>
-        <Text style={styles.addButtonText}>Add Rubric</Text>
-      </TouchableOpacity>
-
       {/* List of Rubrics */}
       <ScrollView contentContainerStyle={styles.rubricList}>
         {rubrics.map((rubric, index) => (
@@ -44,6 +39,11 @@ export default function Rubrics() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+
+      {/* Add Rubric Button */}
+      <TouchableOpacity style={styles.addButton} onPress={() => {}}>
+        <Text style={styles.addButtonText}>Add Rubric</Text>
+      </TouchableOpacity>
 
       {/* Bottom Navigation */}
       <BottomMenu router={router} />
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 100,
   },
   addButtonText: {
     color: 'white',

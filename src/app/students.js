@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Dimensions, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -8,7 +8,7 @@ import Header from './components/Header';
 
 const students = [
   { id: "1", name: "James L." },
-  { id: "2", name: "John M." },
+  { id: "2", name: "Star D." },
   { id: "3", name: "Jack N." },
   { id: "4", name: "Emily R." },
   { id: "5", name: "Sophia T." },
@@ -21,24 +21,45 @@ export default function Students() {
   const router = useRouter();
   const width = Dimensions.get('window').width;
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.studentItem}
-      onPress={() =>
-        router.push({
-          pathname: "/progress",
-          params: { studentId: item.id, studentName: item.name },
-        })
-      }
-    >
-      <View style={styles.placeholder}>
-        <Text style={styles.placeholderText}>
-          {item.name.charAt(0).toUpperCase()}
-        </Text>
-      </View>
-      <Text style={styles.studentName}>{item.name}</Text>
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item }) => {
+    const flipAnim = new Animated.Value(0);
+
+    const flipStyle = {
+      transform: [
+        {
+          rotateY: flipAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: ["0deg", "360deg"],
+          }),
+        },
+      ],
+    };
+
+    Animated.timing(flipAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+
+    return (
+      <TouchableOpacity
+        style={styles.studentItem}
+        onPress={() =>
+          router.push({
+            pathname: "/progress",
+            params: { studentId: item.id, studentName: item.name },
+          })
+        }
+      >
+        <Animated.View style={[styles.placeholder, flipStyle]}>
+          <Text style={styles.placeholderText}>
+            {item.name.charAt(0).toUpperCase()}
+          </Text>
+        </Animated.View>
+        <Text style={styles.studentName}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
+  Animated,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { Audio } from 'expo-av';
 
 const { width } = Dimensions.get("window");
 
@@ -18,7 +20,7 @@ const onboardingPages = [
     icon: "robot",
     title: "Hi, I'm TA²I, your AI Teaching Assistant!",
     description:
-      "I can help you grade & write feedback for papers and worksheets, track progress, and more!",
+      "",
   },
   {
     id: "2",
@@ -60,22 +62,88 @@ const onboardingPages = [
 export default function OnboardingScreen() {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [sound, setSound] = useState(null);
   const flatListRef = useRef(null);
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+  const [typedText, setTypedText] = useState("");
+
+  const playSound = async () => {
+    const { sound: newSound } = await Audio.Sound.createAsync(require('../../assets/robot.wav'));
+    await newSound.playAsync();
+    setSound(newSound);
+  };
+
+  const stopSound = async () => {
+    if (sound) {
+      await sound.stopAsync();
+      await sound.unloadAsync();
+      setSound(null);
+    }
+  };
+
+  useEffect(() => {
+    playSound();
+
+    return () => {
+      stopSound();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (currentIndex === 0) {
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 2,
+        useNativeDriver: true,
+      }).start();
+
+      const text = onboardingPages[0].title;
+      let index = 0;
+      const interval = setInterval(() => {
+        setTypedText((prev) => prev + text[index]);
+        index++;
+        if (index === text.length) {
+          clearInterval(interval);
+        }
+      }, 100);
+
+      return () => clearInterval(interval);
+    }
+  }, [currentIndex]);
 
   const handleNext = () => {
     if (currentIndex < onboardingPages.length - 1) {
       flatListRef.current.scrollToIndex({ index: currentIndex + 1 });
-      setCurrentIndex((prev) => prev + 1);
+      setCurrentIndex(currentIndex + 1);
     } else {
-      router.push("/classes"); // Navigate to Classes Page after the last onboarding page
+      handleOnboardingComplete();
     }
+  };
+
+  const handleOnboardingComplete = () => {
+    stopSound();
+    router.push('/classes');
   };
 
   return (
     <View style={styles.container}>
       <FlatList
-        ref={flatListRef}
         data={onboardingPages}
+        renderItem={({ item }) => (
+          <View style={styles.page}>
+            <View style={styles.iconContainer}>
+              {item.id === "1" ? (
+                <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+                  <MaterialCommunityIcons name={item.icon} size={120} color="#6B46C1" />
+                </Animated.View>
+              ) : (
+                <MaterialCommunityIcons name={item.icon} size={120} color="#6B46C1" />
+              )}
+            </View>
+            <Text style={styles.title}>{item.id === "1" ? typedText : item.title}</Text>
+            {item.id !== "1" && <Text style={styles.description}>{item.description}</Text>}
+          </View>
+        )}
         keyExtractor={(item) => item.id}
         horizontal
         pagingEnabled
@@ -84,19 +152,7 @@ export default function OnboardingScreen() {
           const index = Math.round(event.nativeEvent.contentOffset.x / width);
           setCurrentIndex(index);
         }}
-        renderItem={({ item }) => (
-          <View style={styles.page}>
-            <View style={styles.iconContainer}>
-              <MaterialCommunityIcons
-                name={item.icon}
-                size={120}
-                color="#6B46C1"
-              />
-            </View>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.description}>{item.description}</Text>
-          </View>
-        )}
+        ref={flatListRef}
       />
       <TouchableOpacity style={styles.button} onPress={handleNext}>
         <Text style={styles.buttonText}>

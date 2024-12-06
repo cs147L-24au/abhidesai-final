@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,9 +8,11 @@ import {
   Modal,
   Dimensions,
   TextInput,
+  Animated,
 } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { Audio } from 'expo-av';
 import BottomMenu from './BottomMenu';
 
 const { width } = Dimensions.get("window");
@@ -31,38 +33,78 @@ export default function Classes() {
   const [newClassGrade, setNewClassGrade] = useState("");
   const router = useRouter();
 
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateYAnim = useRef(new Animated.Value(-100)).current;
+  const topMenuAnim = useRef(new Animated.Value(-100)).current;
+  const bottomMenuAnim = useRef(new Animated.Value(100)).current;
+  const addClassButtonAnim = useRef(new Animated.Value(100)).current;
+
+  const animationDuration = 500;
+
+  const handleButtonClick = async () => {
+  };
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(translateYAnim, {
+        toValue: 0,
+        duration: animationDuration,
+        useNativeDriver: true,
+      }),
+      Animated.timing(topMenuAnim, {
+        toValue: 0,
+        duration: animationDuration,
+        useNativeDriver: true,
+      }),
+      Animated.timing(addClassButtonAnim, {
+        toValue: 0,
+        duration: animationDuration,
+        useNativeDriver: true,
+      }),
+      Animated.timing(bottomMenuAnim, {
+        toValue: 0,
+        duration: animationDuration,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   const renderItem = ({ item, index }) => (
-    <TouchableOpacity
-      style={[styles.classItem, { backgroundColor: colors[index % colors.length] }]}
-      onPress={() =>
-        router.push({
-          pathname: "/class-details",
-          params: { className: item.name }
-        })
-      }
-    >
-      <Ionicons name={item.icon} size={28} color="white" style={styles.classIcon} />
-      <Text style={styles.classText}>{item.name}</Text>
-    </TouchableOpacity>
+    <Animated.View style={{ transform: [{ translateY: translateYAnim }] }}>
+      <TouchableOpacity
+        style={[styles.classItem, { backgroundColor: colors[index % colors.length] }]}
+        onPress={async () => {
+          await handleButtonClick();
+          router.push({
+            pathname: "/class-details",
+            params: { className: item.name }
+          });
+        }}
+      >
+        <Ionicons name={item.icon} size={28} color="white" style={styles.classIcon} />
+        <Text style={styles.classText}>{item.name}</Text>
+      </TouchableOpacity>
+    </Animated.View>
   );
 
   return (
     <View style={styles.container}>
-      {/* Top Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Classes</Text>
-        <View style={styles.iconRow}>
-          <TouchableOpacity onPress={() => setInfoVisible(true)}>
-            <Ionicons name="information-circle-outline" size={28} color="#6B46C1" />
-          </TouchableOpacity>
-          <MaterialCommunityIcons
-            name="robot-outline"
-            size={32}
-            color="#6B46C1"
-            style={styles.robotIcon}
-          />
+      <Animated.View style={{ transform: [{ translateY: topMenuAnim }] }}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Classes</Text>
+          <View style={styles.iconRow}>
+            <TouchableOpacity onPress={() => setInfoVisible(true)}>
+              <Ionicons name="information-circle-outline" size={28} color="#6B46C1" />
+            </TouchableOpacity>
+            <MaterialCommunityIcons
+              name="robot-outline"
+              size={32}
+              color="#6B46C1"
+              style={styles.robotIcon}
+            />
+          </View>
         </View>
-      </View>
+      </Animated.View>
 
       {/* Info Modal */}
       <Modal visible={infoVisible} transparent animationType="slide">
@@ -92,14 +134,19 @@ export default function Classes() {
         />
 
         {/* Add Classes Button */}
-        <View style={styles.addClassButtonContainer}>
-          <TouchableOpacity 
-            style={styles.addClassButton} 
-            onPress={() => setAddClassModalVisible(true)}
-          >
-            <Text style={styles.addClassButtonText}>Add Classes</Text>
-          </TouchableOpacity>
-        </View>
+        <Animated.View style={{ transform: [{ translateY: addClassButtonAnim }] }}>
+          <View style={styles.addClassButtonContainer}>
+            <TouchableOpacity 
+              style={styles.addClassButton} 
+              onPress={async () => {
+                await handleButtonClick();
+                setAddClassModalVisible(true);
+              }}
+            >
+              <Text style={styles.addClassButtonText}>Add Classes</Text>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
       </View>
 
       {/* Add Class Modal */}
@@ -138,7 +185,8 @@ export default function Classes() {
             <View style={styles.modalButtons}>
               <TouchableOpacity 
                 style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => {
+                onPress={async () => {
+                  await handleButtonClick();
                   setAddClassModalVisible(false);
                   setNewClassName("");
                   setNewClassGrade("");
@@ -149,7 +197,8 @@ export default function Classes() {
               
               <TouchableOpacity 
                 style={[styles.modalButton, styles.addButton]}
-                onPress={() => {
+                onPress={async () => {
+                  await handleButtonClick();
                   // Here we would normally save the class
                   setAddClassModalVisible(false);
                   setNewClassName("");
@@ -163,8 +212,9 @@ export default function Classes() {
         </View>
       </Modal>
 
-      {/* Bottom Menu */}
-      <BottomMenu router={router} />
+      <Animated.View style={{ transform: [{ translateY: bottomMenuAnim }] }}>
+        <BottomMenu router={router} />
+      </Animated.View>
     </View>
   );
 }

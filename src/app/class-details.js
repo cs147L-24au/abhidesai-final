@@ -74,6 +74,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
   },
   menuText: {
     marginTop: 12,

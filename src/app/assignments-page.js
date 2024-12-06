@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,14 +15,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import BottomMenu from './BottomMenu';
 import Header from './components/Header';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 
 const { width } = Dimensions.get("window");
 
 export default function AssignmentsPage() {
   const [assignments, setAssignments] = useState([
-    { id: 1, title: "Assignment 1", score: 85 },
-    { id: 2, title: "Assignment 2", score: 90 },
-    { id: 3, title: "Assignment 3", score: 78 },
+    { id: 1, title: "SAT", fullTitle: "SAT Practice", score: 80 },
+    { id: 2, title: "Handwritten", fullTitle: "Handwritten Essay", score: 90 },
+    { id: 3, title: "Typed", fullTitle: "Typed Essay", score: 65 },
   ]);
   const [modalVisible, setModalVisible] = useState(false);
   const [newAssignmentTitle, setNewAssignmentTitle] = useState('');
@@ -43,38 +44,61 @@ export default function AssignmentsPage() {
     setModalVisible(false);
   };
 
+  const animation = useSharedValue(0);
+
+  useEffect(() => {
+    animation.value = withTiming(1, {
+      duration: 2000,
+      easing: Easing.out(Easing.exp),
+    });
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scaleY: animation.value }],
+    };
+  });
+
   return (
     <View style={styles.container}>
       <Header title="Assignments" />
       {/* Progress Chart */}
-      <BarChart
-        data={{
-          labels: assignments.map((a) => a.title),
-          datasets: [
-            {
-              data: assignments.map((a) => a.score),
-              color: (opacity = 1) => `#6B46C1`,
+      <Animated.View style={animatedStyle}>
+        <BarChart
+          data={{
+            labels: assignments.map((a) => a.fullTitle),
+            datasets: [
+              {
+                data: assignments.map((a) => a.score),
+                color: (opacity = 1) => `#6B46C1`,
+              },
+            ],
+          }}
+          width={width - 10}
+          height={200}
+          chartConfig={{
+            backgroundColor: "#FFFFFF",
+            backgroundGradientFrom: "#FFFFFF",
+            backgroundGradientTo: "#FFFFFF",
+            decimalPlaces: 0,
+            color: (opacity = 1) => `#6B46C1`,
+            labelColor: () => "#4A5568",
+            barPercentage: 0.8,
+            barRadius: 6,
+            propsForBackgroundLines: {
+              strokeWidth: 0,
             },
-          ],
-        }}
-        width={width - 40}
-        height={200}
-        chartConfig={{
-          backgroundColor: "#FFFFFF",
-          backgroundGradientFrom: "#FFFFFF",
-          backgroundGradientTo: "#FFFFFF",
-          decimalPlaces: 0,
-          color: (opacity = 1) => `#6B46C1`,
-          labelColor: () => "#4A5568",
-          barPercentage: 0.8,
-          barRadius: 6,
-          propsForBackgroundLines: {
-            strokeWidth: 0,
-          },
-        }}
-        style={styles.chart}
-        fromZero
-      />
+          }}
+          style={{
+            borderRadius: 12,
+            paddingVertical: 8,
+            marginBottom: 20,
+            backgroundColor: "#FFFFFF",
+            marginLeft: -20,
+          }}
+          fromZero
+        />
+      </Animated.View>
 
       {/* Average Score */}
       <Text style={styles.sectionTitle}>
@@ -85,8 +109,8 @@ export default function AssignmentsPage() {
         data={assignments}
         renderItem={({ item }) => (
           <View style={styles.assignmentItem}>
-            <Text style={styles.assignmentTitle}>{item.title}</Text>
-            <Text style={styles.assignmentScore}>{item.score}%</Text>
+            <Text style={styles.assignmentTitle}>{item.fullTitle}</Text>
+            <Text style={styles.assignmentScore}>Score: {item.score}%</Text>
           </View>
         )}
         keyExtractor={(item) => item.id.toString()}

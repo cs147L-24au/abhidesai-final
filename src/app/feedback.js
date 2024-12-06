@@ -27,9 +27,13 @@ const assignments = [
 
 const students = [
   { id: "1", name: "James L." },
-  { id: "2", name: "John M." },
+  { id: "2", name: "Star D." },
   { id: "3", name: "Jack N." },
   { id: "4", name: "Emily R." },
+  { id: "5", name: "Sophia T." },
+  { id: "6", name: "Oliver P." },
+  { id: "7", name: "Liam C." },
+  { id: "8", name: "Emma W." },
 ];
 
 export default function Feedback() {
@@ -95,13 +99,14 @@ export default function Feedback() {
     }
   };
 
-  const handleGenerateFeedback = async () => {
+  const processFile = async () => {
     if (!selectedAssignment || !selectedStudent || !selectedFile) {
       Alert.alert("Missing Information", "Please select an assignment, student, and file before generating feedback.");
       return;
     }
 
     setIsLoading(true);
+    setProgressStatus('Processing...');
     try {
       const feedbackResponse = await generateFeedback(
         selectedFile,
@@ -119,10 +124,7 @@ export default function Feedback() {
       });
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert(
-        "Error",
-        "Failed to generate feedback. Please try again."
-      );
+      setProgressStatus('Error generating feedback');
     } finally {
       setIsLoading(false);
       setProgressStatus('');
@@ -243,7 +245,7 @@ export default function Feedback() {
             (!selectedAssignment || !selectedStudent || !selectedFile || isLoading) &&
               styles.generateButtonDisabled,
           ]}
-          onPress={handleGenerateFeedback}
+          onPress={processFile}
           disabled={!selectedAssignment || !selectedStudent || !selectedFile || isLoading}
         >
           {isLoading ? (
@@ -369,12 +371,14 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end",
+    justifyContent: "center",
   },
   modalContent: {
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
     maxHeight: "70%",
   },
   modalHeader: {
