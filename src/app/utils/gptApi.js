@@ -8,7 +8,7 @@ const api = axios.create({
   baseURL: 'https://api.openai.com/v1',
   timeout: 60000,
   headers: {
-    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+    'Authorization': `Bearer ${OPENAI_API_KEY}`,
     'Content-Type': 'application/json',
   }
 });
@@ -74,20 +74,17 @@ const compressImage = async (uri, onProgress) => {
     onProgress?.('Compressing image...');
     console.log('Starting image compression');
 
-    // First try with moderate compression
     let compressed = await ImageManipulator.manipulateAsync(
       uri,
       [{ resize: { width: 800 } }],
       { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
     );
 
-    // Get base64
     let base64 = await FileSystem.readAsStringAsync(compressed.uri, {
       encoding: FileSystem.EncodingType.Base64
     });
 
-    // If still too large, compress more aggressively
-    if (base64.length > 1000000) { // If larger than ~1MB
+    if (base64.length > 1000000) { // ~1MB
       onProgress?.('Image still large, applying additional compression...');
       compressed = await ImageManipulator.manipulateAsync(
         uri,
@@ -109,55 +106,110 @@ const compressImage = async (uri, onProgress) => {
 };
 
 export const generateFeedback = async (file, student, assignment, onProgress) => {
-  let content = "hello";
-  if (assignment.name === "SAT Practice Test") {
-    content = "According to botanists, a viburnum plant experiencing insect damage may develop erineum—adiscolored, felty growth—on its leaf blades. A ______viburnum plant, on the other hand, will have leaveswith smooth surfaces and uniformly greencoloration.Which choice completes the text with the mostlogical and precise word or phrase?A) strugglingB) beneficialC) simpleD) healthy2Nigerian American author Teju Cole’s ______ hitwo passions—photography and the writtenword—culminates in his 2017 book, Blind Spot,which evocatively combines his original photographsfrom his travels with his poetic prose.Which choice completes the text with the mostlogical and precise word or phrase?A) indifference toB) enthusiasm forC) concern aboutD) surprise at Novelist N. K. Jemisin declines to ______ the conventions of the science fiction genre in which she writes, and she has suggested that her readers appreciate her work precisely because of this willingness to thwart expectations and avoid formulaic plots and themes. Which choice completes the text with the most logical and precise word or phrase? A) question B) react to C) perceive D) conform to In Nature Poem (2017), Kumeyaay poet Tommy Pico portrays his ______ the natural world by honoring the centrality of nature within his tribe’s traditional beliefs while simultaneously expressing his distaste for being in wilderness settings himself. Which choice completes the text with the most logical and precise word or phrase? A) responsiveness to B) ambivalence toward C) renunciation of D) mastery over. Assume the student answered A to all questions the correct answers are D, B, D, A. Give a breakdown of wrong and right answers and feedback for each.";
+  let systemPrompt = "";
+  let userPrompt = "";
+
+  // Custom prompts for each assignment
+  switch (assignment.name) {
+    case "SAT Practice Test":
+      systemPrompt = "You are an expert SAT paper grader providing feedback on student answers.";
+      userPrompt = `
+        The student answered the following SAT questions. Here are their answers:
+        1. Answer: A
+        2. Answer: A
+        3. Answer: A
+        4. Answer: A
+
+        Correct answers are:
+        1. D
+        2. B
+        3. D
+        4. A
+
+        Provide detailed feedback on each question, explaining why the student's answer is correct or incorrect.
+      `;
+      break;
+
+    case "Handwritten Essay":
+      systemPrompt = "You are an experienced teacher grading handwritten essays.";
+      userPrompt = `
+        Here is a transcription of the student's handwritten essay:
+        Essay is an essay on the benefits and drawbacks of cursive handwriting. 
+
+        Provide feedback focusing on grammar, structure, coherence, and creativity. Highlight areas where the student excels and areas needing improvement.
+      `;
+      break;
+
+    case "Typed Essay":
+      systemPrompt = "You are an experienced teacher grading typed essays.";
+      userPrompt = `
+        Here is the student's typed essay:
+        ctive Essay:
+The process of researching and writing my essay "The Peace-Loving Preachers of War:
+Understanding the American Clergy's Shift to Interventionism in the First World War" provided
+me with a valuable opportunity to not just learn about a specific topic in history but to develop a
+unique contribution to that topic. My project began with the broad desire to learn more about the
+way in which the Christian religion interacted with and influenced the First World War. Over the
+course of a semester, that spark of interest led me to discover the fascinating subject of the
+American clergy's evolving support for their nation's intervention and to develop my own
+original arguments on the nature of this ideological development.
+As typical for any project, the research for this paper involved a long process of
+elimination and rejection. Due to the broad focus with which I started, I spent dozens of hours
+reading through letters, poems, and memoirs from soldiers in the hope that I could discover
+patterns and trends pertaining to the spiritual convictions of those serving on the front lines
+during the Great War. Likewise, I scoured collections of wartime posters and propaganda in
+search of religious themes and iconography. Although both searches yielded interesting
+discoveries, I ultimately concluded that the lack of secondary sources available for these topics
+made them too impenetrable for a single semester-long study. For two weeks, I also
+experimented with a cross-cultural comparison of Christianity as a motivating factor in the
+United States and England during the war. Through discussions with Dr. Barnwell, who oversaw
+my research, I eventually concluded that broadening my focus beyond America would create too
+m a n y c h a l l e n g e s f o r t h i s l e n g t h o f p r o j e c t .
+
+        Provide detailed feedback on grammar, structure, coherence, and style. Offer suggestions for improvement and praise for strengths in the essay.
+      `;
+      break;
+
+    default:
+      throw new Error("Unknown assignment type");
   }
-  console.log("assignment",assignment);
+
   try {
-    // Check if API key is present
-    console.log(process.env.OPENAI_API_KEY);
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key is not configured');
+    if (!OPENAI_API_KEY) {
+      throw new Error("OpenAI API key is not configured");
     }
 
-      const payload = {
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: "You are an expert SAT paper grader providing feedback on student answers."
-          },
-          {
-            role: "user",
-            content: content
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 500
-      };
-    
+    const payload = {
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 1000
+    };
 
-    onProgress?.('Sending request to Chat API...');
-    console.log('Making Chat API request with payload:', {
+    onProgress?.("Sending request to Chat API...");
+    console.log("Making Chat API request with payload:", {
       model: payload.model,
       messageCount: payload.messages.length,
       temperature: payload.temperature,
-      max_tokens: payload.max_tokens
+      max_tokens: payload.max_tokens,
     });
     
     const response = await api.post('/chat/completions', payload);
-    console.log('Chat API response received');
+    console.log("Chat API response received");
     return response.data.choices[0].message.content;
   } catch (error) {
-    console.error('Chat API error:', {
+    console.error("Chat API error:", {
       message: error.message,
       code: error.code,
-      response: error.response ? {
-        status: error.response.status,
-        data: error.response.data
-      } : 'No response',
-      isNetworkError: error.message === 'Network Error'
+      response: error.response
+        ? {
+            status: error.response.status,
+            data: error.response.data,
+          }
+        : "No response",
     });
     throw error;
   }
