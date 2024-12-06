@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { BarChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import BottomMenu from './BottomMenu';
 import Header from './components/Header';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 
 const { width } = Dimensions.get("window");
 
@@ -45,11 +46,25 @@ const studentData = {
 export default function Progress() {
   const router = useRouter();
   const { studentId, studentName } = useLocalSearchParams();
-  const student = studentData[studentId] || {};
+  const student = studentData[studentId] || studentData["1"];
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [feedback, setFeedback] = useState("");
+  const animation = useSharedValue(0);
+
+  useEffect(() => {
+    animation.value = withTiming(1, {
+      duration: 2000,
+      easing: Easing.out(Easing.exp),
+    });
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scaleY: animation.value }],
+    };
+  });
 
   const toggleDetails = (index) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -93,38 +108,40 @@ export default function Progress() {
       <Header title={studentName || "Unknown Student"} />
       {/* Progress Chart */}
       <Text style={styles.sectionTitle}>Overall Progress</Text>
-      <BarChart
-        data={{
-          labels: ["Jan", "Feb", "Mar", "Apr", "May"],
-          datasets: [{ 
-            data: student.progress || [0, 0, 0, 0, 0],
-            color: (opacity = 1) => `#6B46C1`
-          }],
-        }}
-        width={width - 40}
-        height={180}
-        chartConfig={{
-          backgroundColor: "#FFFFFF",
-          backgroundGradientFrom: "#FFFFFF",
-          backgroundGradientTo: "#FFFFFF",
-          decimalPlaces: 0,
-          color: (opacity = 1) => `#6B46C1`,
-          labelColor: () => "#4A5568",
-          barPercentage: 0.8,
-          barRadius: 6,
-          propsForBackgroundLines: {
-            strokeWidth: 0
-          }
-        }}
-        style={{
-          borderRadius: 12,
-          paddingVertical: 8,
-          marginBottom: 20,
-          backgroundColor: "#FFFFFF",
-        }}
-        withHorizontalLabels={false}
-        fromZero={true}
-      />
+      <Animated.View style={animatedStyle}>
+        <BarChart
+          data={{
+            labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+            datasets: [{ 
+              data: student.progress || [0, 0, 0, 0, 0],
+              color: (opacity = 1) => `#6B46C1`
+            }],
+          }}
+          width={width - 40}
+          height={180}
+          chartConfig={{
+            backgroundColor: "#FFFFFF",
+            backgroundGradientFrom: "#FFFFFF",
+            backgroundGradientTo: "#FFFFFF",
+            decimalPlaces: 0,
+            color: (opacity = 1) => `#6B46C1`,
+            labelColor: () => "#4A5568",
+            barPercentage: 0.8,
+            barRadius: 6,
+            propsForBackgroundLines: {
+              strokeWidth: 0
+            }
+          }}
+          style={{
+            borderRadius: 12,
+            paddingVertical: 8,
+            marginBottom: 20,
+            backgroundColor: "#FFFFFF",
+          }}
+          withHorizontalLabels={false}
+          fromZero={true}
+        />
+      </Animated.View>
 
       {/* Categories */}
       <FlatList
@@ -160,8 +177,7 @@ export default function Progress() {
         </View>
       </Modal>
 
-      {/* Bottom Navigation */}
-      <BottomMenu router={router} />
+      <BottomMenu />
     </View>
   );
 }
@@ -178,6 +194,7 @@ const styles = StyleSheet.create({
     color: "#4A5568",
     marginTop: 20,
     marginBottom: 12,
+    paddingLeft: 20,
   },
   chart: {
     marginVertical: 20,
@@ -259,5 +276,15 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: "#fff",
     fontWeight: "bold",
+  },
+  bottomMenu: {
+    width: '100%',
+    height: 60,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#E2E8F0',
   },
 });
