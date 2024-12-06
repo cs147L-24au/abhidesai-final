@@ -7,10 +7,13 @@ import {
   FlatList,
   Dimensions,
   Animated,
+  Image
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Audio } from 'expo-av';
+import { useAuthRequest, makeRedirectUri } from 'expo-auth-session';
+import * as Google from 'expo-auth-session/providers/google';
 
 const { width } = Dimensions.get("window");
 
@@ -66,6 +69,23 @@ export default function OnboardingScreen() {
   const flatListRef = useRef(null);
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const [typedText, setTypedText] = useState("");
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    clientId: '823929388814-gb959otb3dqceoigotpr8dgn20brv8an.apps.googleusercontent.com',
+    redirectUri: makeRedirectUri({ useProxy: true }),
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { id_token } = response.params;
+      // Navigate to the next onboarding slide
+      if (currentIndex < onboardingPages.length - 1) {
+        flatListRef.current.scrollToIndex({ index: currentIndex + 1 });
+        setCurrentIndex(currentIndex + 1);
+      } else {
+        handleOnboardingComplete();
+      }
+    }
+  }, [response, currentIndex]);
 
   const playSound = async () => {
     const { sound: newSound } = await Audio.Sound.createAsync(require('../../assets/robot.wav'));
@@ -142,6 +162,35 @@ export default function OnboardingScreen() {
             </View>
             <Text style={styles.title}>{item.id === "1" ? typedText : item.title}</Text>
             {item.id !== "1" && <Text style={styles.description}>{item.description}</Text>}
+            {item.id === "1" && (
+              <>
+                <TouchableOpacity
+                  style={[styles.signInButton, styles.googleButton, { marginTop: 150 }]}
+                  onPress={() => {
+                    promptAsync();
+                  }}
+                >
+                  <MaterialCommunityIcons name="google" size={24} color="#6B46C1" />
+                  <Text style={styles.googleButtonText}>Sign in with Google</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.signInButton, styles.loginButton, { marginTop: 10, width: 200 }]}
+                  onPress={() => {
+                    // Navigate through the normal onboarding process
+                    handleNext();
+                  }}
+                >
+                  <Text style={styles.loginButtonText}>Log In</Text>
+                </TouchableOpacity>
+              </>
+            )}
+            {item.id !== "1" && (
+              <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+                <Text style={styles.nextButtonText}>
+                  {currentIndex === onboardingPages.length - 1 ? "Get Started" : "Next"}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
         keyExtractor={(item) => item.id}
@@ -154,11 +203,6 @@ export default function OnboardingScreen() {
         }}
         ref={flatListRef}
       />
-      <TouchableOpacity style={styles.button} onPress={handleNext}>
-        <Text style={styles.buttonText}>
-          {currentIndex === onboardingPages.length - 1 ? "Get Started" : "Next"}
-        </Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -166,8 +210,52 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "space-between",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 16,
+    color: "#2D3748",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  signInButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    marginBottom: 10,
+    width: 200,
+  },
+  signInText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  googleButton: {
+    backgroundColor: '#fff',
+    borderColor: '#6B46C1',
+    borderWidth: 1, 
+    width: 200,
+  },
+  googleButtonText: {
+    color: '#6B46C1',
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  loginButton: {
+    backgroundColor: '#6B46C1',
+    borderColor: '#6B46C1',
+    borderWidth: 1,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   page: {
     width,
@@ -182,14 +270,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 40,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 16,
-    color: "#2D3748",
-    textAlign: "center",
+    marginBottom: 20,
   },
   description: {
     fontSize: 16,
@@ -197,18 +278,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 24,
   },
-  button: {
-    backgroundColor: "#6B46C1",
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    alignItems: "center",
-    marginBottom: 40,
-    marginHorizontal: 20,
+  logo: {
+    marginBottom: 20,
   },
-  buttonText: {
-    color: "white",
+  nextButton: {
+    backgroundColor: '#6B46C1',
+    padding: 15,
+    borderRadius: 8,
+    marginTop: 20,
+    width: '95%',
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: 40,
+  },
+  nextButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
     fontSize: 18,
-    fontWeight: "600",
   },
 });

@@ -4,20 +4,21 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import BottomMenu from './BottomMenu';
 import Header from './components/Header';
+import PdfViewer from './PdfViewer';
 
 // Mock data for rubrics - replace with actual data source later
 const rubrics = [
-  "Sat-Practice-Test.pdf",
-  "Handwritten-Essay.pdf",
-  "Typed-Essay.pdf"
+  "Sat-Practice-Test-1.pdf",
+  "Handwritten-Essay-1.pdf",
+  "Typed-Essay-1.pdf"
 ];
 
 export default function Rubrics() {
   const router = useRouter();
 
   const handleRubricPress = (rubricName) => {
-    // TODO: Implement rubric viewing functionality
-    console.log(`Opening rubric: ${rubricName}`);
+    // No operation on button press
+    console.log(`Rubric button pressed: ${rubricName}`);
   };
 
   return (

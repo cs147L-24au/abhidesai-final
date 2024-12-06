@@ -2966,7 +2966,7 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
-base64-js@^1.2.3, base64-js@^1.3.1, base64-js@^1.5.1:
+base64-js@^1.2.3, base64-js@^1.3.0, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
   resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
@@ -4035,6 +4035,11 @@ expect@^29.0.0, expect@^29.7.0:
     jest-message-util "^29.7.0"
     jest-util "^29.7.0"
 
+expo-application@~6.0.0:
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/expo-application/-/expo-application-6.0.1.tgz"
+  integrity sha512-w+1quSmKp8SYKT+GAFHSN5c6u+PqoVRIfpsLyRQrQdOnBA9dA8Hw6JT9sHNFmA30A2v1b/sdYZE3qKuRJFNSWQ==
+
 expo-asset@~11.0.1:
   version "11.0.1"
   resolved "https://registry.npmjs.org/expo-asset/-/expo-asset-11.0.1.tgz"
@@ -4044,6 +4049,18 @@ expo-asset@~11.0.1:
     expo-constants "~17.0.0"
     invariant "^2.2.4"
     md5-file "^3.2.3"
+
+expo-auth-session@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/expo-auth-session/-/expo-auth-session-6.0.1.tgz"
+  integrity sha512-ip47J74BQBp4gWK5FgqEt7T108twmpSPIfHPhtIH0PvY5GLDKuN1OiL6QIQUgs3xC6n1M0bja6kXakbnNcVSLA==
+  dependencies:
+    expo-application "~6.0.0"
+    expo-constants "~17.0.0"
+    expo-crypto "~14.0.0"
+    expo-linking "~7.0.0"
+    expo-web-browser "~14.0.0"
+    invariant "^2.2.4"
 
 expo-av@^15.0.1:
   version "15.0.1"
@@ -4062,6 +4079,13 @@ expo-constants@*, expo-constants@~17.0.0, expo-constants@~17.0.3:
   dependencies:
     "@expo/config" "~10.0.4"
     "@expo/env" "~0.4.0"
+
+expo-crypto@~14.0.0:
+  version "14.0.1"
+  resolved "https://registry.npmjs.org/expo-crypto/-/expo-crypto-14.0.1.tgz"
+  integrity sha512-/gGpD9UAz8fgZtU08cwwqeQElkFmMy2Hc8lLa9laSjD3YN0XM07zDJyJ+CC1VhQ63G8WpUnq1IHSmaPbbLp+oQ==
+  dependencies:
+    base64-js "^1.3.0"
 
 expo-document-picker@^13.0.1:
   version "13.0.1"
@@ -4111,7 +4135,7 @@ expo-keep-awake@~14.0.1:
   resolved "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-14.0.1.tgz"
   integrity sha512-c5mGCAIk2YM+Vsdy90BlEJ4ZX+KG5Au9EkJUIxXWlpnuKmDAJ3N+5nEZ7EUO1ZTheqoSBeAo4jJ8rTWPU+JXdw==
 
-expo-linking@*, expo-linking@~7.0.3:
+expo-linking@*, expo-linking@~7.0.0, expo-linking@~7.0.3:
   version "7.0.3"
   resolved "https://registry.npmjs.org/expo-linking/-/expo-linking-7.0.3.tgz"
   integrity sha512-YiDacNzeQZd/bdOwGyi+YlawM4GGbcSRkuFCpDGIK7D1KUGqLinBHwJvxUMb9Zert2Ois5IHtmZaZ1et6g229g==
@@ -4186,7 +4210,7 @@ expo-system-ui@~4.0.3:
     "@react-native/normalize-colors" "0.76.2"
     debug "^4.3.2"
 
-expo-web-browser@~14.0.1:
+expo-web-browser@~14.0.0, expo-web-browser@~14.0.1:
   version "14.0.1"
   resolved "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-14.0.1.tgz"
   integrity sha512-QM9F3ie+UyIOoBvqFmT6CZojb1vMc2H+7ZlMT5dEu1PL2jtYyOeK2hLfbt/EMt7CBm/w+P29H9W9Y9gdebOkuQ==
@@ -6945,10 +6969,10 @@ react-native-web@*, react-native-web@~0.19.13:
     postcss-value-parser "^4.2.0"
     styleq "^0.1.3"
 
-react-native-webview@*, react-native-webview@13.12.4:
-  version "13.12.4"
-  resolved "https://registry.npmjs.org/react-native-webview/-/react-native-webview-13.12.4.tgz"
-  integrity sha512-8lWeYPVWeOj0ya9ZpDesOQPRgczuN3ogQHlhS21sNXndd4kvfPG+WjlRdrvxYgj//udpwmzcWzagwLnEp60Aqg==
+react-native-webview@*, react-native-webview@^13.12.5:
+  version "13.12.5"
+  resolved "https://registry.npmjs.org/react-native-webview/-/react-native-webview-13.12.5.tgz"
+  integrity sha512-INOKPom4dFyzkbxbkuQNfeRG9/iYnyRDzrDkJeyvSWgJAW2IDdJkWFJBS2v0RxIL4gqLgHkiIZDOfiLaNnw83Q==
   dependencies:
     escape-string-regexp "^4.0.0"
     invariant "2.2.4"
