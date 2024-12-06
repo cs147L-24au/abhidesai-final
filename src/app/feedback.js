@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { generateFeedback } from './utils/gptApi';
+import BottomMenu from './BottomMenu';
 
 // Mock data - replace with actual data later
 const assignments = [
@@ -47,7 +48,6 @@ export default function Feedback() {
         copyToCacheDirectory: true,
       });
 
-
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const file = result.assets[0];
         const fileData = {
@@ -57,9 +57,6 @@ export default function Feedback() {
           size: file.size
         };
         setSelectedFile(fileData);
-        console.log('New selected file state:', fileData);
-      } else {
-        console.log('File selection was cancelled or failed');
       }
     } catch (err) {
       console.error("Error picking document:", err);
@@ -97,10 +94,6 @@ export default function Feedback() {
     }
   };
 
-  useEffect(() => {
-    console.log('selectedFile state changed:', selectedFile);
-  }, [selectedFile]);
-
   const handleGenerateFeedback = async () => {
     if (!selectedAssignment || !selectedStudent || !selectedFile) {
       Alert.alert("Missing Information", "Please select an assignment, student, and file before generating feedback.");
@@ -116,7 +109,6 @@ export default function Feedback() {
         (status) => setProgressStatus(status)
       );
 
-      // Navigate to response page
       router.push({
         pathname: "/gptResponse",
         params: { 
@@ -296,21 +288,8 @@ export default function Feedback() {
         "Select Student"
       )}
 
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="settings-outline" size={24} color="#6B46C1" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => router.replace("/classes")}
-        >
-          <Ionicons name="home-outline" size={24} color="#6B46C1" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="person-outline" size={24} color="#6B46C1" />
-        </TouchableOpacity>
-      </View>
+      {/* Bottom Menu */}
+      <BottomMenu router={router} />
     </View>
   );
 }
@@ -465,18 +444,6 @@ const styles = StyleSheet.create({
   modalItemTextSelected: {
     color: "#6B46C1",
     fontWeight: "600",
-  },
-  bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    paddingVertical: 20,
-    borderTopWidth: 1,
-    borderTopColor: "#E2E8F0",
-    backgroundColor: "white",
-  },
-  navButton: {
-    padding: 10,
   },
   loadingContainer: {
     marginTop: 20,
