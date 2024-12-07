@@ -16,7 +16,8 @@
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan QR codes.",
         "NSPhotoLibraryUsageDescription": "This app requires access to the photo library to select profile pictures."
-      }
+      },
+      "runtimeVersion": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,8 +26,13 @@
       },
       "permissions": [
         "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "CAMERA",
         "READ_EXTERNAL_STORAGE"
-      ]
+      ],
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -52,6 +58,9 @@
       "eas": {
         "projectId": "876cff7c-19b4-4ce6-b8ad-0e22e1aa3090"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/876cff7c-19b4-4ce6-b8ad-0e22e1aa3090"
     }
   }
 }

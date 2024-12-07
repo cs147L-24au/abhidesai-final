@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Dimensions, Animated, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, Dimensions, Animated, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import Header from './components/Header';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -7,11 +7,14 @@ import { Share } from 'react-native';
 
 export default function Feedback() {
   const { response, imageUri } = useLocalSearchParams();
+  const [editableResponse, setEditableResponse] = useState(response);
+  const [isEditing, setIsEditing] = useState(false);
+  const textInputRef = useRef(null);
 
   const handleShare = async () => {
     try {
       const result = await Share.share({
-        message: response,
+        message: editableResponse,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -25,6 +28,24 @@ export default function Feedback() {
     } catch (error) {
       alert(error.message);
     }
+  };
+
+  const toggleEditing = () => {
+    setIsEditing(!isEditing);
+    if (!isEditing) {
+      // Enter editing mode
+      setTimeout(() => {
+        textInputRef.current?.focus();
+      }, 0);
+    } else {
+      // Exit editing mode
+      setEditableResponse(editableResponse.trim());
+    }
+  };
+
+  const handleCheckmarkPress = () => {
+    setIsEditing(false);
+    Alert.dismiss();
   };
 
   return (
@@ -42,10 +63,33 @@ export default function Feedback() {
             )}
           </View>
           <View style={styles.feedbackContainer}>
-            <Text style={styles.responseText}>{response}</Text>
+            {isEditing ? (
+              <TextInput
+                ref={textInputRef}
+                style={styles.responseTextInput}
+                value={editableResponse}
+                onChangeText={setEditableResponse}
+                multiline
+              />
+            ) : (
+              <Text style={styles.responseText}>{editableResponse}</Text>
+            )}
           </View>
         </View>
       </ScrollView>
+      <TouchableOpacity
+        onPress={toggleEditing}
+        style={[
+          styles.floatingEditButton,
+          { backgroundColor: isEditing ? "green" : "#6B46C1" },
+        ]}
+      >
+        <MaterialCommunityIcons
+          name={isEditing ? "check" : "pencil"}
+          size={20}
+          color="white"
+        />
+      </TouchableOpacity>
       <TouchableOpacity style={styles.floatingButton} onPress={handleShare}>
         <MaterialCommunityIcons name="email-outline" size={24} color="white" />
         <Text style={styles.floatingButtonText}>Share with Student</Text>
@@ -64,30 +108,31 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
-    alignItems: 'center', // Center the overall content horizontally
+    alignItems: 'center',
   },
   imageContainer: {
-    width: 360, // Wider frame
-    height: 340, // Make the frame square
-    borderWidth: 2, // Frame border thickness
-    borderColor: '#6B46C1', // Frame border color
-    borderRadius: 12, // Slight rounding for the frame
-    overflow: 'hidden', // Ensures rounded corners
+    width: 360,
+    height: 300,
+    borderWidth: 2,
+    borderColor: '#6B46C1',
+    borderRadius: 12,
+    overflow: 'hidden',
     marginBottom: 20,
-    alignItems: 'center', // Center image inside the frame
-    justifyContent: 'center', // Center image inside the frame
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: -20,
   },
   image: {
-    width: '92%', // Slightly smaller than the container's width
-    height: '92%', // Slightly smaller than the container's height
-    borderRadius: 10, // Slight rounding for the image itself
+    width: '92%',
+    height: '92%',
+    borderRadius: 10,
   },
   feedbackContainer: {
-    width: 360, // Match the frame's width for consistency
-    borderWidth: 2, // Match the frame's border thickness
-    borderColor: '#6B46C1', // Match the frame's border color
-    borderRadius: 12, // Slight rounding for consistency
+    position: 'relative',
+    width: 360,
+    borderWidth: 2,
+    borderColor: '#6B46C1',
+    borderRadius: 12,
     backgroundColor: 'white',
     padding: 15,
     alignSelf: 'center',
@@ -96,7 +141,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: "#4A5568",
-    textAlign: 'left', // Align text to the left
+    textAlign: 'left',
+  },
+  responseTextInput: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#4A5568",
+    textAlign: 'left',
+    minHeight: 60,
+  },
+  floatingEditButton: {
+    position: 'absolute',
+    bottom: 365,
+    right: 30,
+    backgroundColor: '#6B46C1',
+    width: 40,
+    height: 40,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
   },
   floatingButton: {
     position: 'absolute',
