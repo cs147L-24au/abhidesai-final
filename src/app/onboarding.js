@@ -108,9 +108,14 @@ export default function OnboardingScreen() {
       const text = onboardingPages[0].title;
       let index = 0;
       const interval = setInterval(() => {
-        setTypedText((prev) => prev + text[index]);
-        index++;
-        if (index === text.length) clearInterval(interval);
+        setTypedText((prev) => {
+          if (index < text.length) {
+            return prev + text[index++];
+          } else {
+            clearInterval(interval);
+            return prev;
+          }
+        });
       }, 100);
       return () => clearInterval(interval);
     }
